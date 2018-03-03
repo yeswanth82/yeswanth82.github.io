@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <style type="text/css">
+		body {
+			overflow:hidden;
+		}
+		div{
+			height:720PX;
+			width:1280PX;
+			text-align:center;
+			border:0px solid silver;
+			display: table-cell;
+			vertical-align:middle;
+			color:#000000;
+			background-color:#FFFFFF;
+			font-weight:bold;
+			font-family:Verdana, Geneva, sans-serif;
+			font-size:240px;
+		}
+    </style>
+    <title>Cast Dice</title>
+  </head>
+  <body>
+	<div id="playground">
+    Roll!
+  </div>
+  <script src="http://code.jquery.com/jquery-git2.js"></script>
+  <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+  <script type="text/javascript">
+ 
+  function roll(senderId){
+ 
+    var number = Math.floor(Math.random()*6);
+ 
+    var value = String.fromCharCode(0x2680+number);
+ 
+    document.getElementById("playground").innerHTML=value;
+ 
+    window.messageBus.send(senderId, "Number: " + (number+1));
+  };
+ 
+   $(document).ready(function() {
+      window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+      
+      
+      // Chiudo l'applicazione quando non ci sono più client
+      castReceiverManager.onSenderDisconnected = function(event) {
+          console.log('Received Sender Disconnected event: ' + event.data);
+          if (window.castReceiverManager.getSenders().length == 0) {
+            window.close();
+          }
+      };
+ 
+      window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:it.strazz.cast.dice');
+ 
+        window.messageBus.onMessage = function(event) {
+          console.log('Message [' + event.senderId + ']: ' + event.data);
+          roll(event.senderId);
+        }
+ 
+      window.castReceiverManager.start();
+    });
+  </script>
+  </body>
+</html>
