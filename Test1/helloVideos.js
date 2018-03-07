@@ -89,7 +89,7 @@ function initializeCastApi() {
 
   // request session
   //var sessionRequest = new chrome.cast.SessionRequest(applicationIDs[0]);
-  var sessionRequest = new chrome.cast.SessionRequest(577C7519);
+  var sessionRequest = new chrome.cast.SessionRequest('577C7519');
   
   var apiConfig = new chrome.cast.ApiConfig(sessionRequest,
     sessionListener,
